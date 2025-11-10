@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 0.6s ease-in-out 5s forwards;
+        }
+
+        .video-loader {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-loader video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.95;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                visibility: visible;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* Optional: Pulsing glow effect */
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 60px rgba(0, 212, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 100px rgba(0, 212, 255, 0.6);
+            }
+        }
+
+        .video-loader.with-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        /* Loading text (optional) */
+        .loading-text {
+            position: absolute;
+            bottom: 100px;
+            color: #00d4ff;
+            font-size: 16px;
+            letter-spacing: 2px;
+            animation: pulse-text 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Main content (hidden initially) */
+        .main-content {
+            display: none;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .main-content.show {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Loading Animation -->
+    <div class="loader-container" id="loaderContainer">
+        <div class="video-loader with-glow">
+            <video autoplay muted playsinline>
+                <source src="111111.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="loading-text">LOADING...</div>
+    </div>
+
+    <!-- Main Website Content (Hidden until loading finishes) -->
+    <div class="main-content" id="mainContent">
+        <h1>Welcome to Your Website</h1>
+        <p>Your main content goes here</p>
+    </div>
+
+    <script>
+        // Get elements
+        const loaderContainer = document.getElementById('loaderContainer');
+        const mainContent = document.getElementById('mainContent');
+        const video = document.querySelector('.video-loader video');
+
+        // Function to hide loader and show main content
+        function hideLoader() {
+            loaderContainer.style.display = 'none';
+            mainContent.classList.add('show');
+        }
+
+        // Hide loader when video ends
+        if (video) {
+            video.addEventListener('ended', function() {
+                setTimeout(hideLoader, 500);
+            });
+        }
+
+        // Fallback: Hide loader after 6 seconds (in case video doesn't end)
+        setTimeout(hideLoader, 6000);
+
+        // Hide loader immediately if page is already loaded
+        if (document.readyState === 'complete') {
+            hideLoader();
+        }
+    </script>
+
+</body>
+</html>
